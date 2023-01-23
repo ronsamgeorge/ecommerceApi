@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const userRoute = require("./routes/users");
+const authRoute = require("./routes/auth");
 
 const dbUrl = process.env.MONGO_URL;
 const port = process.env.PORT || 8080;
@@ -15,8 +16,11 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-app.use(express.json()); // to parse req bodies
+// to parse req json bodies
+app.use(express.json());
+
 // api endpoint routing
+app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 
 // the server will listen on the specified PORT for incoming traffic, if no port given in env, use 8080
