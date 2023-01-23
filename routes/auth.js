@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const CryptoJs = require("crypto-js");
+const jwt = require("jsonwebtoken");
 
-// Register
-
+// Register new user route
 router.post("/register", async (req, res) => {
   // implement error checking for fields here later
 
@@ -24,7 +24,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// login
+// login route
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
@@ -49,8 +49,18 @@ router.post("/login", async (req, res) => {
       res.status(401).json("Incorrect credential");
     }
 
+    // create jwt access token
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
     const { password, ...others } = user._doc; //stores user info except password in others;
-    res.status(201).json(others);
+    res.status(201).json({ ...others, accessToken });
   } catch (err) {
     res.status(500).json(err);
   }
