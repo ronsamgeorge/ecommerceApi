@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const productRoute = require("./routes/products");
+const cartRoute = require("./routes/carts");
+const orderRoute = require("./routes/order");
 
 const dbUrl = process.env.MONGO_URL;
 const port = process.env.PORT || 8080;
@@ -24,6 +26,8 @@ app.use(express.json());
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
+app.use("/api/carts", cartRoute);
+app.use("/api/orders", orderRoute);
 
 // the server will listen on the specified PORT for incoming traffic, if no port given in env, use 8080
 app.listen(port, () => {
